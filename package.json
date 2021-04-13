@@ -1,0 +1,23 @@
+{
+  "name": "employee_tracker_cms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inknsharps/employee_tracker_cms.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/inknsharps/employee_tracker_cms/issues"
+  },
+  "homepage": "https://github.com/inknsharps/employee_tracker_cms#readme",
+  "dependencies": {
+    "inquirer": "^8.0.0"
+  }
+}
