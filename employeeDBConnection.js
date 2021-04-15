@@ -1,5 +1,6 @@
 require("dotenv").config();
-const mysql = require('mysql');
+const mysql = require("mysql");
+const menu = require("./assets/menu.js")
 
 const connection = mysql.createConnection({
     host: "localhost",
