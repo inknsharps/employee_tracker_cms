@@ -1,7 +1,8 @@
 require("dotenv").config();
 const mysql = require("mysql");
-const menu = require("./assets/menu.js")
+const menu = require("./assets/menu.js");
 
+// MySQL connection details
 const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -13,5 +14,6 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) throw err;
     console.log(`connected as id ${connection.threadId}`);
+    menu.mainMenuSelection(menu.mainMenu);
     connection.end();
 });
