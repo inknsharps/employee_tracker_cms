@@ -1,4 +1,5 @@
 require("dotenv").config();
+const cTable = require('console.table');
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const {
@@ -12,9 +13,10 @@ const {
     addDepartment,
     addRole,
     addEmployee,
-    updateEmployee,
+    updateEmployeeRole,
     updateEmployeeManager,
     viewEmployeesByManager,
+    viewDepartmentBudget,
     deleteDepartment,
     deleteRole,
     deleteEmployee } = require("./assets/menu")
@@ -97,9 +99,9 @@ const updateMenuSelection = () => {
     inquirer.prompt(updateMenu)
         .then((selection) => {
             switch (selection.updateMenu){
-                case "Update employee":
-                    console.log("Update Employees here");
-                    updateMenuSelection();
+                case "Update employee roles":
+                    console.log("----- UPDATE EMPLOYEE'S ROLE -----");
+                    updateData("roles");
                     break;
                 case "Update employee manager":
                     console.log("Update employee manager here");
@@ -144,6 +146,26 @@ const connection = mysql.createConnection({
     database: "employee_db"
 });
 
+const updateData = (dataType) => {
+    switch (dataType){
+        case "roles":
+            inquirer.prompt(updateEmployeeRole)
+                .then(answers => {
+                    connection.query("UPDATE employee SET role_id = ? WHERE id = ?", [
+                        currentRoles.indexOf(answers.newRole) + 1, parseInt(answers.selectedEmployee)], (err, res) => {
+                            if(err) throw err;
+                            console.log(`Updated employee ${answers.selectedEmployee}'s role to ${answers.newRole}.`)
+                            updateMenuSelection();
+                        }
+                    )
+                })
+            break;
+        case "manager":
+            console.log("Managers TBD");
+            updateMenuSelection();
+    }
+}
+
 const createData = (dataType) => {
     switch (dataType){
         case "employees":
@@ -181,16 +203,17 @@ const createData = (dataType) => {
     }
 }
 
-// I figured a switch statement is better than having separate functions for everything
+
 const readData = (dataType) => {
     switch (dataType){
         case "employees":
             connection.query("SELECT * FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id", (err, res) => {
                 if (err) throw err;
-                // console.log(res);
+                let employees = [];
                 res.forEach(index => {
-                    console.log(`ID: ${index.id} | ${index.first_name} | ${index.last_name} | ${index.title} | ${index.department} | ${index.salary}`);
+                    employees.push({ ID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, Department: index.name, Salary: index.salary });
                 })
+                console.table(employees);
                 viewMenuSelection();
             })
             break;
@@ -198,9 +221,11 @@ const readData = (dataType) => {
             connection.query("SELECT * FROM role LEFT JOIN department on role.department_id = department.id", (err, res) => {
                 if (err) throw err;
                 // console.log(res);
+                let roles = [];
                 res.forEach(index => {
-                    console.log(`ID: ${index.id} | ${index.title} | ${index.salary} | ${index.name}`);
+                    roles.push({ID: index.id, Title: index.title, Salary: index.salary, Department: index.name});
                 })
+                console.table(roles);
                 viewMenuSelection();
             })
             break;
@@ -208,15 +233,39 @@ const readData = (dataType) => {
             connection.query("SELECT * FROM department", (err, res) => {
                 if (err) throw err;
                 // console.log(res);
+                let departments = [];
                 res.forEach(index => {
-                    console.log(`ID: ${index.id} | ${index.name}`);
+                    departments.push({ID: index.id, Department: index.name});
                 })
+                console.table(departments);
                 viewMenuSelection();
             })
             break;
         case "budget":
-            console.log("Budget TBD");
-            viewMenuSelection();
+            inquirer.prompt(viewDepartmentBudget)
+                .then(({ department }) => {
+                    // Matcher is used to grab only the department id, we use the same trick of converting the worded department name into a number
+                    let matcher = currentDepartments.indexOf(department) + 1;
+                    // Inner join is used to filter out any null values in the tables
+                    connection.query("SELECT department.id, title, salary, first_name, last_name FROM department INNER JOIN role on department.id = role.department_id INNER JOIN employee on role.id = employee.role_id", (err, res) => {
+                        if (err) throw err;
+                        let budget = [];
+                        res.forEach(index => {
+                            if (index.id === matcher){
+                                budget.push(index.salary);
+                            }
+                        })
+                        // Basically if nothing matched, then terminate the function before we get to the reduce method which can cause errors
+                        if (budget.length === 0){
+                            console.log("Budget is $0! Nobody works for this department. :(");
+                            viewMenuSelection();
+                        } else {
+                            let total = budget.reduce((accumulator, currentValue) => accumulator + currentValue);
+                            console.log(`The budget for the ${department} Department is $${total}.`);
+                            viewMenuSelection();
+                        }
+                    })
+                })
             break;
     }
 }

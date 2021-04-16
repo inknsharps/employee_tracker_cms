@@ -13,6 +13,12 @@ connection.connect((err) => {
     if (err) throw err;
 });
 
+let currentEmployees = [];
+connection.query("SELECT id, first_name, last_name FROM employee", (err, res) => {
+    if (err) throw err;
+    res.forEach(index => currentEmployees.push(`${index.id} - ${index.first_name} ${index.last_name}`));
+})
+
 // This connection query reads and grabs the current titles in the DB
 let currentRoles = [];
 connection.query("SELECT id, title FROM role", (err, res) => {
@@ -78,7 +84,7 @@ const updateMenu = [
         name: "updateMenu",
         message: "---- UPDATE MENU: Please select an option. ----",
         choices: [
-            "Update employee", 
+            "Update employee roles", 
             "Update employee manager",
             "-------- RETURN TO MAIN MENU --------"
         ]
@@ -145,11 +151,33 @@ const addEmployee = [
     }
 ];
 
-const updateEmployee = [];
+const updateEmployeeRole = [
+    {
+        type: "list",
+        name: "selectedEmployee",
+        message: "Please select a current employee.",
+        choices: currentEmployees
+    },
+    {
+        type: "list",
+        name: "newRole",
+        message: "Please input the employee's new role.",
+        choices: currentRoles
+    }
+];
 
 const updateEmployeeManager = [];
 
 const viewEmployeesByManager = [];
+
+const viewDepartmentBudget = [
+    {
+        type: "list",
+        name: "department",
+        message: "Please select which department to check the budget for.",
+        choices: currentDepartments
+    }
+]
 
 const deleteDepartment =[];
 
@@ -168,9 +196,10 @@ module.exports = {
     addDepartment,
     addRole,
     addEmployee,
-    updateEmployee,
+    updateEmployeeRole,
     updateEmployeeManager,
     viewEmployeesByManager,
+    viewDepartmentBudget,
     deleteDepartment,
     deleteRole,
     deleteEmployee

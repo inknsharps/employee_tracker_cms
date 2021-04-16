@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS employee_db;
+
 CREATE DATABASE employee_db;
 
 USE employee_db;
@@ -25,6 +27,7 @@ CREATE TABLE employee (
 	PRIMARY KEY (id)
 );
 
+
 INSERT INTO department (name)
 VALUES ("Marketing"), ("Finance"), ("Business Affairs"), ("IT");
 
@@ -32,8 +35,13 @@ INSERT INTO role (title, salary, department_id)
 VALUES ("Marketing Manager", 65000, 1), ("Marketing Associate", 45000, 1), ("Lead Developer", 80000, 4);
 
 INSERT INTO employee (first_name, last_name, role_id)
-VALUES ("John", "Doe", 2);
+VALUES ("Jane", "One", 1), ("John", "Two", 2), ("Vito", "Three", 3);
+
+-- DELETE FROM employee WHERE id = ;
+DELETE FROM role WHERE id = 5;
 
 SELECT * FROM department;
 SELECT * FROM role;
 SELECT * FROM employee;
+
+SELECT name = "Marketing", title, salary, first_name, last_name FROM department INNER JOIN role on department.id = role.department_id INNER JOIN employee on role.id = employee.role_id;
