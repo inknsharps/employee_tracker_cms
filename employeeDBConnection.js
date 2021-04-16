@@ -2,6 +2,8 @@ require("dotenv").config();
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const {
+    currentRoles,
+    currentDepartments,
     mainMenu,
     viewMenu,
     createMenu,
@@ -10,9 +12,6 @@ const {
     addDepartment,
     addRole,
     addEmployee,
-    viewDepartment,
-    viewRole,
-    viewEmployee,
     updateEmployee,
     updateEmployeeManager,
     viewEmployeesByManager,
@@ -57,11 +56,11 @@ const viewMenuSelection = () => {
                     readData("departments");
                     break;
                 case "View all roles":
-                    console.log("Roles here");
+                    console.log("----- LIST OF ROLES -----");
                     readData("roles");
                     break;
                 case "View budget":
-                    console.log("Budget here");
+                    console.log("----- BUDGET -----");
                     readData("budget");
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
@@ -76,16 +75,16 @@ const createMenuSelection = () => {
         .then((selection) => {
             switch (selection.createMenu){
                 case "Create new employee":
-                    console.log("Create employees here");
-                    createMenuSelection();
+                    console.log("----- CREATE NEW EMPLOYEE -----");
+                    createData("employees");
                     break;
                 case "Create new role":
-                    console.log("Create new role here");
-                    createMenuSelection();
+                    console.log("----- CREATE NEW ROLE -----");
+                    createData("roles");
                     break;
                 case "Create new department":
-                    console.log("Create new dept here");
-                    createMenuSelection();
+                    console.log("----- CREATE NEW DEPARTMENT -----");
+                    createData("departments");
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
                     mainMenuSelection();
@@ -144,6 +143,43 @@ const connection = mysql.createConnection({
     password: process.env.PASS,
     database: "employee_db"
 });
+
+const createData = (dataType) => {
+    switch (dataType){
+        case "employees":
+            inquirer.prompt(addEmployee)
+                .then(answers => {
+                    // Because the user selects the name of the role in inquirer, we have to convert it back into an integer based on the role ID so the SQL database doesn't get messed up.
+                    connection.query("INSERT INTO employee (first_name, last_name, role_id) VALUES (?, ?, ?)", [answers.employeeFName, answers.employeeLName, currentRoles.indexOf(answers.employeeRole) + 1], (err, res) => {
+                        if (err) throw err;
+                        console.log(`Added new employee: ${employeeFName} ${employeeLName}, Role: ${employeeRole}.`);
+                        createMenuSelection();
+                    }) 
+                })
+            break;
+        case "roles":
+            inquirer.prompt(addRole)
+                .then(answers => {
+                    // Same indexOf thing as the employees, but this time we're getting the department ID.
+                    connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answers.roleTitle, answers.roleSalary, currentDepartments.indexOf(answers.roleDepartment) + 1], (err, res) => {
+                        if (err) throw err;
+                        console.log(`Added new role: ${answers.roleTitle} with salary of ${answers.roleSalary}.`);
+                        createMenuSelection();
+                    })
+                })
+            break;
+        case "departments":
+            inquirer.prompt(addDepartment)
+                .then(answers => {
+                    connection.query("INSERT INTO department (name) VALUES (?)", answers.departmentName, (err, res) => {
+                        if (err) throw err;
+                        console.log(`Added new department: ${answers.departmentName}`);
+                        createMenuSelection();
+                    })
+                })
+            break;
+    }
+}
 
 // I figured a switch statement is better than having separate functions for everything
 const readData = (dataType) => {

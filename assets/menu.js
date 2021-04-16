@@ -1,3 +1,32 @@
+const mysql = require("mysql");
+
+/* Connection Functions */
+const connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: process.env.USER,
+    password: process.env.PASS,
+    database: "employee_db"
+});
+
+connection.connect((err) => {
+    if (err) throw err;
+});
+
+// This connection query reads and grabs the current titles in the DB
+let currentRoles = [];
+connection.query("SELECT id, title FROM role", (err, res) => {
+    if (err) throw err;
+    res.forEach(index => currentRoles.push(index.title));
+})
+
+let currentDepartments = [];
+connection.query("SELECT id, name FROM department", (err, res) => {
+    if (err) throw err;
+    res.forEach(index => currentDepartments.push(index.name));
+})
+
+
 /* Inquirer Menu Arrays */ 
 const mainMenu = [
     {
@@ -88,6 +117,12 @@ const addRole = [
         type: "input",
         name: "roleSalary",
         message: "Please input the new role's base salary."
+    },
+    {
+        type: "list",
+        name: "roleDepartment",
+        message: "Please input which department this role belongs to.",
+        choices: currentDepartments
     }
 ];
 
@@ -103,17 +138,12 @@ const addEmployee = [
         message: "Please input the new employee's last name."
     },
     {
-        type: "input",
+        type: "list",
         name: "employeeRole",
-        message: "Please input the new employee's role."
+        message: "Please input the new employee's role.",
+        choices: currentRoles
     }
 ];
-
-const viewDepartment = [];
-
-const viewRole = [];
-
-const viewEmployee = [];
 
 const updateEmployee = [];
 
@@ -128,6 +158,8 @@ const deleteRole = [];
 const deleteEmployee = [];
 
 module.exports = {
+    currentRoles,
+    currentDepartments,
     mainMenu,
     viewMenu,
     createMenu,
@@ -136,9 +168,6 @@ module.exports = {
     addDepartment,
     addRole,
     addEmployee,
-    viewDepartment,
-    viewRole,
-    viewEmployee,
     updateEmployee,
     updateEmployeeManager,
     viewEmployeesByManager,
