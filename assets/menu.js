@@ -48,7 +48,7 @@ const mainMenu = [
     {
         type: "list",
         name: "mainMenu",
-        message: "MAIN MENU - Please select an option.",
+        message: "\n ---------------------------------------- \n MAIN MENU - Please select an option. \n ---------------------------------------- \n",
         choices: [
             "--------- ACCESS VIEW MENU ---------", 
             "-------- ACCESS CREATE MENU --------",
@@ -63,7 +63,7 @@ const viewMenu = [
     {
         type: "list",
         name: "viewMenu",
-        message: "---- VIEW MENU: Please select an option. ----",
+        message: "\n ---------------------------------------- \n VIEW MENU: Please select an option. \n ---------------------------------------- \n",
         choices: [
             "View all employees", 
             "View all employees by manager",
@@ -79,7 +79,7 @@ const createMenu = [
     {
         type: "list",
         name: "createMenu",
-        message: "---- CREATE MENU: Please select an option. ----",
+        message: "\n ---------------------------------------- \n CREATE MENU: Please select an option. \n ---------------------------------------- \n",
         choices: [
             "Create new employee", 
             "Create new role",
@@ -93,7 +93,7 @@ const updateMenu = [
     {
         type: "list",
         name: "updateMenu",
-        message: "---- UPDATE MENU: Please select an option. ----",
+        message: "\n ---------------------------------------- \n UPDATE MENU: Please select an option. \n ---------------------------------------- \n ",
         choices: [
             "Update employee roles", 
             "Update employee manager",
@@ -106,7 +106,7 @@ const deleteMenu = [
     {
         type: "list",
         name: "deleteMenu",
-        message: "---- DELETE MENU: Please select an option. ----",
+        message: "\n ---------------------------------------- \n DELETE MENU: Please select an option. \n ---------------------------------------- \n ",
         choices: [
             "Delete employee", 
             "Delete role",

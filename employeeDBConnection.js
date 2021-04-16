@@ -43,6 +43,7 @@ const mainMenuSelection = () => {
                     deleteMenuSelection();
                     break;
                 case "--------- EXIT THE PROGRAM ---------":
+                    console.log("\n ---------------------------------------- \n EXITING PROGRAM... \n ---------------------------------------- \n")
                     connection.end();
                     process.exit(0);
             }
@@ -54,23 +55,23 @@ const viewMenuSelection = () => {
         .then((selection) => {
             switch (selection.viewMenu){
                 case "View all employees":
-                    console.log("----- LIST OF EMPLOYEES -----");
+                    console.log("\n ---------------------------------------- \n LIST OF EMPLOYEES \n ---------------------------------------- \n");
                     readData("employees");
                     break;
                 case "View all employees by manager":
-                    console.log("----- LIST OF EMPLOYEES BY MANAGER -----");
+                    console.log("\n ---------------------------------------- \n LIST OF EMPLOYEES BY MANAGER \n ---------------------------------------- \n");
                     readData("employeesByManager")
                     break
                 case "View all departments":
-                    console.log("----- LIST OF DEPARTMENTS -----");
+                    console.log("\n ---------------------------------------- \n LIST OF DEPARTMENTS \n ---------------------------------------- \n");
                     readData("departments");
                     break;
                 case "View all roles":
-                    console.log("----- LIST OF ROLES -----");
+                    console.log("\n ---------------------------------------- \n LIST OF ROLES \n ---------------------------------------- \n");
                     readData("roles");
                     break;
                 case "View budget":
-                    console.log("----- BUDGET -----");
+                    console.log("\n ---------------------------------------- \n VIEW BUDGET \n ---------------------------------------- \n");
                     readData("budget");
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
@@ -85,15 +86,15 @@ const createMenuSelection = () => {
         .then((selection) => {
             switch (selection.createMenu){
                 case "Create new employee":
-                    console.log("----- CREATE NEW EMPLOYEE -----");
+                    console.log("\n ---------------------------------------- \n CREATE NEW EMPLOYEE \n ---------------------------------------- \n");
                     createData("employees");
                     break;
                 case "Create new role":
-                    console.log("----- CREATE NEW ROLE -----");
+                    console.log("\n ---------------------------------------- \n CREATE NEW ROLE \n ---------------------------------------- \n");
                     createData("roles");
                     break;
                 case "Create new department":
-                    console.log("----- CREATE NEW DEPARTMENT -----");
+                    console.log("\n ---------------------------------------- \n CREATE NEW DEPARTMENT \n ---------------------------------------- \n");
                     createData("departments");
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
@@ -108,11 +109,11 @@ const updateMenuSelection = () => {
         .then((selection) => {
             switch (selection.updateMenu){
                 case "Update employee roles":
-                    console.log("----- UPDATE EMPLOYEE'S ROLE -----");
+                    console.log("\n ---------------------------------------- \n UPDATE EMPLOYEE'S ROLE \n ---------------------------------------- \n");
                     updateData("roles");
                     break;
                 case "Update employee manager":
-                    console.log("Update employee manager here");
+                    console.log("\n ---------------------------------------- \n UPDATE EMPLOYEE'S MANAGER \n ---------------------------------------- \n");
                     updateData("manager");
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
@@ -127,15 +128,15 @@ const deleteMenuSelection = () => {
         .then((selection) => {
             switch (selection.deleteMenu){
                 case "Delete employee":
-                    console.log("Delete Employees here");
+                    console.log("\n ---------------------------------------- \n DELETE EMPLOYEES \n ---------------------------------------- \n");
                     deleteData("employee");
                     break;
                 case "Delete role":
-                    console.log("Delete roles here");
+                    console.log("\n ---------------------------------------- \n DELETE ROLES \n ---------------------------------------- \n");
                     deleteData("role");
                     break;
                 case "Delete department":
-                    console.log("Delete department here");
+                    console.log("\n ---------------------------------------- \n DELETE DEPARTMENTS \n ---------------------------------------- \n");
                     deleteData("department");
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
