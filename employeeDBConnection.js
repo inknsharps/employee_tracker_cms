@@ -2,7 +2,7 @@ require("dotenv").config();
 const cTable = require('console.table');
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const {
+let {
     currentRoles,
     currentDepartments,
     mainMenu,
@@ -19,7 +19,10 @@ const {
     viewDepartmentBudget,
     deleteDepartment,
     deleteRole,
-    deleteEmployee } = require("./assets/menu")
+    deleteEmployee,
+    renderDepartments,
+    renderRoles,
+    renderEmployees } = require("./assets/menu")
 
 /* Menu Functions */
 const mainMenuSelection = () => {
@@ -128,7 +131,7 @@ const deleteMenuSelection = () => {
                     break;
                 case "Delete department":
                     console.log("Delete department here");
-                    deleteMenuSelection();
+                    deleteData("department");
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
                     mainMenuSelection();
@@ -145,6 +148,27 @@ const connection = mysql.createConnection({
     password: process.env.PASS,
     database: "employee_db"
 });
+
+const deleteData = (dataType) => {
+    switch (dataType){
+        case ("employee"):
+            
+        case ("role"):
+
+        case ("department"):
+            inquirer.prompt(deleteDepartment)
+                .then(({department}) => {
+                    connection.query("DELETE FROM department WHERE name = ?", [department], (err, res) => {
+                        if (err) throw err;
+                        console.log(`Deleted ${department} from the department table. Updating accessible data...`);
+                        // For the same reasons as in createData, we update the array manually.
+                        currentDepartments.splice(currentDepartments.indexOf(department), 1);
+                        deleteMenuSelection();
+                    })
+                })
+            break;
+    }
+}
 
 const updateData = (dataType) => {
     switch (dataType){
@@ -196,13 +220,14 @@ const createData = (dataType) => {
                     connection.query("INSERT INTO department (name) VALUES (?)", answers.departmentName, (err, res) => {
                         if (err) throw err;
                         console.log(`Added new department: ${answers.departmentName}`);
+                        // We're pushing the new department to the currentDepartments array because my functions don't want to work
+                        currentDepartments.push(answers.departmentName);
                         createMenuSelection();
                     })
                 })
             break;
     }
 }
-
 
 const readData = (dataType) => {
     switch (dataType){
@@ -275,3 +300,7 @@ connection.connect((err) => {
     console.log(`connected as id ${connection.threadId}`);
     mainMenuSelection();
 });
+
+// TO DO
+// Fix the issue where the current array of stuff in the DB duplicates whenever you create or delete an entry
+// Add the manager stuff

@@ -14,24 +14,36 @@ connection.connect((err) => {
 });
 
 let currentEmployees = [];
-connection.query("SELECT id, first_name, last_name FROM employee", (err, res) => {
-    if (err) throw err;
-    res.forEach(index => currentEmployees.push(`${index.id} - ${index.first_name} ${index.last_name}`));
-})
+let renderEmployees = () => {
+    connection.query("SELECT id, first_name, last_name FROM employee", (err, res) => {
+        if (err) throw err;
+        res.forEach(index => currentEmployees.push(`${index.id} - ${index.first_name} ${index.last_name}`));
+    })
+}
+
+renderEmployees();
 
 // This connection query reads and grabs the current titles in the DB
 let currentRoles = [];
-connection.query("SELECT id, title FROM role", (err, res) => {
-    if (err) throw err;
-    res.forEach(index => currentRoles.push(index.title));
-})
+let renderRoles = () => {
+    connection.query("SELECT id, title FROM role", (err, res) => {
+        if (err) throw err;
+        res.forEach(index => currentRoles.push(index.title));
+    })    
+}
+
+renderRoles();
 
 let currentDepartments = [];
-connection.query("SELECT id, name FROM department", (err, res) => {
-    if (err) throw err;
-    res.forEach(index => currentDepartments.push(index.name));
-})
+let renderDepartments = () => {
+    currentDepartments = [];
+    connection.query("SELECT id, name FROM department", (err, res) => {
+        if (err) throw err;
+        res.forEach(index => currentDepartments.push(index.name));
+    })
+}
 
+renderDepartments();
 
 /* Inquirer Menu Arrays */ 
 const mainMenu = [
@@ -179,7 +191,14 @@ const viewDepartmentBudget = [
     }
 ]
 
-const deleteDepartment =[];
+const deleteDepartment =[
+    {
+        type: "list",
+        name: "department",
+        message: "Please select which department to delete.",
+        choices: currentDepartments
+    }
+];
 
 const deleteRole = [];
 
@@ -202,5 +221,8 @@ module.exports = {
     viewDepartmentBudget,
     deleteDepartment,
     deleteRole,
-    deleteEmployee
+    deleteEmployee,
+    renderDepartments,
+    renderRoles,
+    renderEmployees
 }
