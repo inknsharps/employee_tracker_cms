@@ -176,7 +176,20 @@ const updateEmployeeRole = [
     }
 ];
 
-const updateEmployeeManager = [];
+const updateEmployeeManager = [
+    {
+        type: "list",
+        name: "selectedEmployee",
+        message: "Please select a current employee.",
+        choices: currentEmployees
+    },
+    {
+        type: "list",
+        name: "assignedManager",
+        message: "Please input who this employee reports to.",
+        choices: currentEmployees
+    }
+];
 
 const viewEmployeesByManager = [];
 

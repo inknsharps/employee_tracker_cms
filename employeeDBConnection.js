@@ -109,7 +109,7 @@ const updateMenuSelection = () => {
                     break;
                 case "Update employee manager":
                     console.log("Update employee manager here");
-                    updateMenuSelection();
+                    updateData("manager");
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
                     mainMenuSelection();
@@ -196,16 +196,24 @@ const updateData = (dataType) => {
                 .then(answers => {
                     connection.query("UPDATE employee SET role_id = ? WHERE id = ?", [
                         currentRoles.indexOf(answers.newRole) + 1, parseInt(answers.selectedEmployee)], (err, res) => {
-                            if(err) throw err;
-                            console.log(`Updated employee ${answers.selectedEmployee}'s role to ${answers.newRole}.`)
+                            if (err) throw err;
+                            console.log(`Updated employee ${answers.selectedEmployee}'s role to ${answers.newRole}.`);
                             updateMenuSelection();
                         }
                     )
                 })
             break;
         case "manager":
-            console.log("Managers TBD");
-            updateMenuSelection();
+            inquirer.prompt(updateEmployeeManager)
+                .then(({selectedEmployee, assignedManager}) => {
+                    // In this case we set the manager ID to the employee ID of the person who is becoming the manager
+                    connection.query("UPDATE employee SET manager_id = ? WHERE id = ?", [parseInt(assignedManager), parseInt(selectedEmployee)], (err, res) => {
+                        if (err) throw err;
+                        console.log(`Updated employee ${selectedEmployee} who now reports to ${assignedManager}.`);
+                        updateMenuSelection();
+                    })
+                })
+            break;
     }
 }
 
@@ -258,7 +266,7 @@ const readData = (dataType) => {
                 if (err) throw err;
                 let employees = [];
                 res.forEach(index => {
-                    employees.push({ EmployeeID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, Department: index.name, Salary: index.salary });
+                    employees.push({ EmployeeID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, ManagersID: index.manager_id, Department: index.name, Salary: index.salary });
                 })
                 console.table(employees);
                 viewMenuSelection();
