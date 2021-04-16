@@ -16,14 +16,11 @@ let {
     addEmployee,
     updateEmployeeRole,
     updateEmployeeManager,
-    viewEmployeesByManager,
     viewDepartmentBudget,
     deleteDepartment,
     deleteRole,
-    deleteEmployee,
-    renderDepartments,
-    renderRoles,
-    renderEmployees } = require("./assets/menu")
+    deleteEmployee
+} = require("./assets/menu")
 
 /* Menu Functions */
 const mainMenuSelection = () => {
@@ -341,10 +338,9 @@ const readData = (dataType) => {
 
 connection.connect((err) => {
     if (err) throw err;
-    console.log(`connected as id ${connection.threadId}`);
+    console.log(`MYSQL: Connected as ID ${connection.threadId}.`);
     mainMenuSelection();
 });
 
 // TO DO
-// Add the manager stuff
 // destructure some asnwers from inquirer for cleaner code

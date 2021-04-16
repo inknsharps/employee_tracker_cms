@@ -1,3 +1,4 @@
+const inquirer = require("inquirer");
 const mysql = require("mysql");
 
 /* Connection Functions */
@@ -70,6 +71,7 @@ const viewMenu = [
             "View all departments", 
             "View all roles", 
             "View budget", 
+            new inquirer.Separator(" "),
             "-------- RETURN TO MAIN MENU --------"
         ]
     }
@@ -84,6 +86,7 @@ const createMenu = [
             "Create new employee", 
             "Create new role",
             "Create new department",
+            new inquirer.Separator(" "),
             "-------- RETURN TO MAIN MENU --------"
         ]
     }
@@ -97,6 +100,7 @@ const updateMenu = [
         choices: [
             "Update employee roles", 
             "Update employee manager",
+            new inquirer.Separator(" "),
             "-------- RETURN TO MAIN MENU --------"
         ]
     }
@@ -111,6 +115,7 @@ const deleteMenu = [
             "Delete employee", 
             "Delete role",
             "Delete department",
+            new inquirer.Separator(" "),
             "-------- RETURN TO MAIN MENU --------"
         ]
     }
@@ -192,8 +197,6 @@ const updateEmployeeManager = [
     }
 ];
 
-const viewEmployeesByManager = [];
-
 const viewDepartmentBudget = [
     {
         type: "list",
@@ -244,7 +247,6 @@ module.exports = {
     addEmployee,
     updateEmployeeRole,
     updateEmployeeManager,
-    viewEmployeesByManager,
     viewDepartmentBudget,
     deleteDepartment,
     deleteRole,
