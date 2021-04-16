@@ -39,9 +39,15 @@ VALUES ("Jane", "One", 1), ("John", "Two", 2), ("Vito", "Three", 3);
 -- DELETE FROM employee WHERE id = ;
 -- DELETE FROM role WHERE id = 5;
 
+-- UPDATE employee SET manager_id = 1 WHERE id = 2;
+
 -- SELECT * FROM department;
 -- SELECT * FROM role;
 -- SELECT * FROM employee;
+
+SELECT manager_id, employee.id, first_name, last_name FROM employee ORDER BY manager_id DESC;
+
+SELECT employee.manager_id, employee.id, first_name, last_name FROM employee FULL JOIN employee ORDER BY manager_id DESC;
 
 -- SELECT employee.id, first_name, last_name, title, salary, name, manager_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id;
 -- SELECT name = "IT", title, salary, first_name, last_name FROM department INNER JOIN role on department.id = role.department_id INNER JOIN employee on role.id = employee.role_id;-- 

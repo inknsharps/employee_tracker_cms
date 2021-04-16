@@ -57,6 +57,10 @@ const viewMenuSelection = () => {
                     console.log("----- LIST OF EMPLOYEES -----");
                     readData("employees");
                     break;
+                case "View all employees by manager":
+                    console.log("----- LIST OF EMPLOYEES BY MANAGER -----");
+                    readData("employeesByManager")
+                    break
                 case "View all departments":
                     console.log("----- LIST OF DEPARTMENTS -----");
                     readData("departments");
@@ -267,6 +271,17 @@ const readData = (dataType) => {
                 let employees = [];
                 res.forEach(index => {
                     employees.push({ EmployeeID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, ManagersID: index.manager_id, Department: index.name, Salary: index.salary });
+                })
+                console.table(employees);
+                viewMenuSelection();
+            })
+            break;
+        case "employeesByManager":
+            connection.query("SELECT manager_id, employee.id, first_name, last_name FROM employee ORDER BY manager_id DESC", (err, res) => {
+                if (err) throw err;
+                let employees = [];
+                res.forEach(index => {
+                    employees.push({ ManagersID: index.manager_id, EmployeeID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, Department: index.name, Salary: index.salary });
                 })
                 console.table(employees);
                 viewMenuSelection();

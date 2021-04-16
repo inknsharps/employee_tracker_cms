@@ -66,6 +66,7 @@ const viewMenu = [
         message: "---- VIEW MENU: Please select an option. ----",
         choices: [
             "View all employees", 
+            "View all employees by manager",
             "View all departments", 
             "View all roles", 
             "View budget", 
