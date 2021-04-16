@@ -128,7 +128,7 @@ const deleteMenuSelection = () => {
                     break;
                 case "Delete role":
                     console.log("Delete roles here");
-                    deleteMenuSelection();
+                    deleteData("role");
                     break;
                 case "Delete department":
                     console.log("Delete department here");
@@ -150,6 +150,7 @@ const connection = mysql.createConnection({
     database: "employee_db"
 });
 
+// For the same reasons as in createData, we update our data arrays manually with the splice method.
 const deleteData = (dataType) => {
     switch (dataType){
         case ("employee"):
@@ -165,6 +166,14 @@ const deleteData = (dataType) => {
             break;
         case ("role"):
             inquirer.prompt(deleteRole)
+                .then(({deleteRole}) => {
+                    connection.query("DELETE FROM role WHERE title = ?", [deleteRole], (err, res) => {
+                        if (err) throw err;
+                        console.log(`Deleted ${deleteRole} from the employee table. Updating accessible data...`);
+                        currentRoles.splice(currentRoles.indexOf(deleteRole), 1);
+                        deleteMenuSelection();
+                    })
+                })
             break;
         case ("department"):
             inquirer.prompt(deleteDepartment)
@@ -172,7 +181,6 @@ const deleteData = (dataType) => {
                     connection.query("DELETE FROM department WHERE name = ?", [deleteDepartment], (err, res) => {
                         if (err) throw err;
                         console.log(`Deleted ${deleteDepartment} from the department table. Updating accessible data...`);
-                        // For the same reasons as in createData, we update the array manually.
                         currentDepartments.splice(currentDepartments.indexOf(deleteDepartment), 1);
                         deleteMenuSelection();
                     })
@@ -201,6 +209,7 @@ const updateData = (dataType) => {
     }
 }
 
+// We're pushing the newly created data the existing array because my functions for rerendering those arrays don't want to work.
 const createData = (dataType) => {
     switch (dataType){
         case "employees":
@@ -219,7 +228,7 @@ const createData = (dataType) => {
         case "roles":
             inquirer.prompt(addRole)
                 .then(answers => {
-                    // Same indexOf thing as the employees, but this time we're getting the department ID.
+                    // Same indexOf thing as the employees, but this time we're getting the department ID
                     connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answers.roleTitle, answers.roleSalary, currentDepartments.indexOf(answers.roleDepartment) + 1], (err, res) => {
                         if (err) throw err;
                         console.log(`Added new role: ${answers.roleTitle} with salary of ${answers.roleSalary}.`);
@@ -234,7 +243,6 @@ const createData = (dataType) => {
                     connection.query("INSERT INTO department (name) VALUES (?)", answers.departmentName, (err, res) => {
                         if (err) throw err;
                         console.log(`Added new department: ${answers.departmentName}`);
-                        // We're pushing the new department to the currentDepartments array because my functions don't want to work
                         currentDepartments.push(answers.departmentName);
                         createMenuSelection();
                     })
@@ -292,7 +300,7 @@ const readData = (dataType) => {
                                 budget.push(index.salary);
                             }
                         })
-                        // Basically if nothing matched, then terminate the function before we get to the reduce method which can cause errors
+                        // If nothing matched, then terminate the function before we get to the reduce method which can cause errors
                         if (budget.length === 0){
                             console.log("Budget is $0! Nobody works for this department. :(");
                             viewMenuSelection();
@@ -314,6 +322,5 @@ connection.connect((err) => {
 });
 
 // TO DO
-// Finish the rest of the delete stuff
 // Add the manager stuff
 // destructure some asnwers from inquirer for cleaner code

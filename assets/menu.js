@@ -13,27 +13,7 @@ connection.connect((err) => {
     if (err) throw err;
 });
 
-let currentEmployees = [];
-let renderEmployees = () => {
-    connection.query("SELECT id, first_name, last_name FROM employee", (err, res) => {
-        if (err) throw err;
-        res.forEach(index => currentEmployees.push(`${index.id} - ${index.first_name} ${index.last_name}`));
-    })
-}
-
-renderEmployees();
-
-// This connection query reads and grabs the current titles in the DB
-let currentRoles = [];
-let renderRoles = () => {
-    connection.query("SELECT id, title FROM role", (err, res) => {
-        if (err) throw err;
-        res.forEach(index => currentRoles.push(index.title));
-    })    
-}
-
-renderRoles();
-
+/* The following arrays and functions grab the respective data from the DB, then shoves it into an array for use in the application. */
 let currentDepartments = [];
 let renderDepartments = () => {
     currentDepartments = [];
@@ -43,7 +23,25 @@ let renderDepartments = () => {
     })
 }
 
+let currentRoles = [];
+let renderRoles = () => {
+    connection.query("SELECT id, title FROM role", (err, res) => {
+        if (err) throw err;
+        res.forEach(index => currentRoles.push(index.title));
+    })    
+}
+
+let currentEmployees = [];
+let renderEmployees = () => {
+    connection.query("SELECT id, first_name, last_name FROM employee", (err, res) => {
+        if (err) throw err;
+        res.forEach(index => currentEmployees.push(`${index.id} - ${index.first_name} ${index.last_name}`));
+    })
+}
+
 renderDepartments();
+renderRoles();
+renderEmployees();
 
 /* Inquirer Menu Arrays */ 
 const mainMenu = [
