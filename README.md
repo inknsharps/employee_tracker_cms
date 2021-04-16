@@ -1,4 +1,6 @@
-# employee_tracker_cms
+# Employee Tracker
+
+![APM](https://img.shields.io/apm/l/vim-mode) ![GitHub top language](https://img.shields.io/github/languages/top/inknsharps/node_email_templater)
 
 ## Description
 
@@ -29,6 +31,10 @@ Navigate to the repository folder on your local machine in a CLI, and run the fo
 ```
     npm start
 ```
-Menu navigation is done through the arrow keys, and enter/return to confirm your selection.
+Menu navigation is done through the arrow keys, and enter/return to confirm your selection. In order to cleanly exit the application you'll need to confirm the EXIT THE PROGRAM option in the main menu.
+
+![Exiting the app](./img/quit.jpg)
+
+If the program is unresponsive, you can always end the process with `Ctrl/cmd + C`.
 
 A video demonstration of all functionality is available [here](#).
