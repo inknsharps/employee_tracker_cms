@@ -194,19 +194,34 @@ const viewDepartmentBudget = [
 const deleteDepartment =[
     {
         type: "list",
-        name: "department",
+        name: "deleteDepartment",
         message: "Please select which department to delete.",
         choices: currentDepartments
     }
 ];
 
-const deleteRole = [];
+const deleteRole = [
+    {
+        type: "list",
+        name: "deleteRole",
+        message: "Please select which role to delete.",
+        choices: currentRoles
+    }
+];
 
-const deleteEmployee = [];
+const deleteEmployee = [
+    {
+        type: "list",
+        name: "deleteEmployee",
+        message: "Please select which employee to delete.",
+        choices: currentEmployees
+    }
+];
 
 module.exports = {
     currentRoles,
     currentDepartments,
+    currentEmployees,
     mainMenu,
     viewMenu,
     createMenu,

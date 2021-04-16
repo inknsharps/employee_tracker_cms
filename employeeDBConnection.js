@@ -5,6 +5,7 @@ const inquirer = require("inquirer");
 let {
     currentRoles,
     currentDepartments,
+    currentEmployees,
     mainMenu,
     viewMenu,
     createMenu,
@@ -123,7 +124,7 @@ const deleteMenuSelection = () => {
             switch (selection.deleteMenu){
                 case "Delete employee":
                     console.log("Delete Employees here");
-                    deleteMenuSelection();
+                    deleteData("employee");
                     break;
                 case "Delete role":
                     console.log("Delete roles here");
@@ -152,17 +153,27 @@ const connection = mysql.createConnection({
 const deleteData = (dataType) => {
     switch (dataType){
         case ("employee"):
-            
+            inquirer.prompt(deleteEmployee)
+                .then(({deleteEmployee}) => {
+                    connection.query("DELETE FROM employee WHERE id = ?", [parseInt(deleteEmployee)], (err, res) => {
+                        if (err) throw err;
+                        console.log(`Deleted ${deleteEmployee} from the employee table. Updating accessible data...`);
+                        currentEmployees.splice(currentEmployees.indexOf(deleteEmployee), 1);
+                        deleteMenuSelection();
+                    })
+                })
+            break;
         case ("role"):
-
+            inquirer.prompt(deleteRole)
+            break;
         case ("department"):
             inquirer.prompt(deleteDepartment)
-                .then(({department}) => {
-                    connection.query("DELETE FROM department WHERE name = ?", [department], (err, res) => {
+                .then(({deleteDepartment}) => {
+                    connection.query("DELETE FROM department WHERE name = ?", [deleteDepartment], (err, res) => {
                         if (err) throw err;
-                        console.log(`Deleted ${department} from the department table. Updating accessible data...`);
+                        console.log(`Deleted ${deleteDepartment} from the department table. Updating accessible data...`);
                         // For the same reasons as in createData, we update the array manually.
-                        currentDepartments.splice(currentDepartments.indexOf(department), 1);
+                        currentDepartments.splice(currentDepartments.indexOf(deleteDepartment), 1);
                         deleteMenuSelection();
                     })
                 })
@@ -194,11 +205,13 @@ const createData = (dataType) => {
     switch (dataType){
         case "employees":
             inquirer.prompt(addEmployee)
-                .then(answers => {
+                .then(({employeeFName, employeeLName, employeeRole}) => {
                     // Because the user selects the name of the role in inquirer, we have to convert it back into an integer based on the role ID so the SQL database doesn't get messed up.
-                    connection.query("INSERT INTO employee (first_name, last_name, role_id) VALUES (?, ?, ?)", [answers.employeeFName, answers.employeeLName, currentRoles.indexOf(answers.employeeRole) + 1], (err, res) => {
+                    connection.query("INSERT INTO employee (first_name, last_name, role_id) VALUES (?, ?, ?)", [employeeFName, employeeLName, currentRoles.indexOf(employeeRole) + 1], (err, res) => {
                         if (err) throw err;
-                        console.log(`Added new employee: ${employeeFName} ${employeeLName}, Role: ${employeeRole}.`);
+                        // res.insertID gives us the ID of the row we inserted this into, which we need for our current employees array
+                        console.log(`Added new employee: ID ${res.insertId} - ${employeeFName} ${employeeLName}, Role: ${employeeRole}.`);
+                        currentEmployees.push(`${res.insertId} - ${employeeFName} ${employeeLName}`);
                         createMenuSelection();
                     }) 
                 })
@@ -210,6 +223,7 @@ const createData = (dataType) => {
                     connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answers.roleTitle, answers.roleSalary, currentDepartments.indexOf(answers.roleDepartment) + 1], (err, res) => {
                         if (err) throw err;
                         console.log(`Added new role: ${answers.roleTitle} with salary of ${answers.roleSalary}.`);
+                        currentRoles.push(answers.roleTitle);
                         createMenuSelection();
                     })
                 })
@@ -232,11 +246,11 @@ const createData = (dataType) => {
 const readData = (dataType) => {
     switch (dataType){
         case "employees":
-            connection.query("SELECT * FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id", (err, res) => {
+            connection.query("SELECT employee.id, first_name, last_name, title, salary, name, manager_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id", (err, res) => {
                 if (err) throw err;
                 let employees = [];
                 res.forEach(index => {
-                    employees.push({ ID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, Department: index.name, Salary: index.salary });
+                    employees.push({ EmployeeID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, Department: index.name, Salary: index.salary });
                 })
                 console.table(employees);
                 viewMenuSelection();
@@ -245,10 +259,9 @@ const readData = (dataType) => {
         case "roles":
             connection.query("SELECT * FROM role LEFT JOIN department on role.department_id = department.id", (err, res) => {
                 if (err) throw err;
-                // console.log(res);
                 let roles = [];
                 res.forEach(index => {
-                    roles.push({ID: index.id, Title: index.title, Salary: index.salary, Department: index.name});
+                    roles.push({ RoleID: index.id, Title: index.title, Salary: index.salary, Department: index.name });
                 })
                 console.table(roles);
                 viewMenuSelection();
@@ -257,10 +270,9 @@ const readData = (dataType) => {
         case "departments":
             connection.query("SELECT * FROM department", (err, res) => {
                 if (err) throw err;
-                // console.log(res);
                 let departments = [];
                 res.forEach(index => {
-                    departments.push({ID: index.id, Department: index.name});
+                    departments.push({ DepartmentID: index.id, Department: index.name });
                 })
                 console.table(departments);
                 viewMenuSelection();
@@ -302,5 +314,6 @@ connection.connect((err) => {
 });
 
 // TO DO
-// Fix the issue where the current array of stuff in the DB duplicates whenever you create or delete an entry
+// Finish the rest of the delete stuff
 // Add the manager stuff
+// destructure some asnwers from inquirer for cleaner code
