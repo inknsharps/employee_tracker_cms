@@ -170,21 +170,29 @@ const deleteData = (dataType) => {
             inquirer.prompt(deleteRole)
                 .then(({deleteRole}) => {
                     connection.query("DELETE FROM role WHERE title = ?", [deleteRole], (err, res) => {
-                        if (err) throw err;
-                        console.log(`Deleted ${deleteRole} from the employee table. Updating accessible data...`);
-                        currentRoles.splice(currentRoles.indexOf(deleteRole), 1);
-                        deleteMenuSelection();
+                        if (err){
+                            console.log("\n ~~~~~~~~~~~~~~ \n W A R N I N G! \n ~~~~~~~~~~~~~~ \n There are employees under this role! Please delete those employees first before deleting the role. Returning to delete menu...");
+                            deleteMenuSelection();
+                        } else {
+                            console.log(`Deleted ${deleteRole} from the employee table. Updating accessible data...`);
+                            currentRoles.splice(currentRoles.indexOf(deleteRole), 1);
+                            deleteMenuSelection();
+                        }
                     })
                 })
             break;
         case ("department"):
             inquirer.prompt(deleteDepartment)
                 .then(({deleteDepartment}) => {
-                    connection.query("DELETE FROM department WHERE name = ?", [deleteDepartment], (err, res) => {
-                        if (err) throw err;
-                        console.log(`Deleted ${deleteDepartment} from the department table. Updating accessible data...`);
-                        currentDepartments.splice(currentDepartments.indexOf(deleteDepartment), 1);
-                        deleteMenuSelection();
+                    connection.query("DELETE FROM department WHERE dept_name = ?", [deleteDepartment], (err, res) => {
+                        if (err) {
+                            console.log("\n ~~~~~~~~~~~~~~ \n W A R N I N G! \n ~~~~~~~~~~~~~~ \n There are roles under this department! Please delete those roles first before deleting the department. Returning to delete menu...");
+                            deleteMenuSelection();
+                        } else {
+                            console.log(`Deleted ${deleteDepartment} from the department table. Updating accessible data...`);
+                            currentDepartments.splice(currentDepartments.indexOf(deleteDepartment), 1);
+                            deleteMenuSelection();
+                        }
                     })
                 })
             break;
@@ -250,7 +258,7 @@ const createData = (dataType) => {
         case "departments":
             inquirer.prompt(addDepartment)
                 .then(({departmentName}) => {
-                    connection.query("INSERT INTO department (name) VALUES (?)", departmentName, (err, res) => {
+                    connection.query("INSERT INTO department (dept_name) VALUES (?)", departmentName, (err, res) => {
                         if (err) throw err;
                         console.log(`Added new department: ${departmentName}`);
                         currentDepartments.push(departmentName);
@@ -279,7 +287,7 @@ const readData = (dataType) => {
                 if (err) throw err;
                 let employees = [];
                 res.forEach(index => {
-                    employees.push({ ManagersID: index.manager_id, EmployeeID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, Department: index.name, Salary: index.salary });
+                    employees.push({ ManagersID: index.manager_id, EmployeeID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, Department: index.dept_name, Salary: index.salary });
                 })
                 console.table(employees);
                 viewMenuSelection();
@@ -290,7 +298,7 @@ const readData = (dataType) => {
                 if (err) throw err;
                 let roles = [];
                 res.forEach(index => {
-                    roles.push({ RoleID: index.id, Title: index.title, Salary: index.salary, Department: index.name });
+                    roles.push({ RoleID: index.id, Title: index.title, Salary: index.salary, Department: index.dept_name });
                 })
                 console.table(roles);
                 viewMenuSelection();
@@ -301,7 +309,7 @@ const readData = (dataType) => {
                 if (err) throw err;
                 let departments = [];
                 res.forEach(index => {
-                    departments.push({ DepartmentID: index.id, Department: index.name });
+                    departments.push({ DepartmentID: index.id, Department: index.dept_name });
                 })
                 console.table(departments);
                 viewMenuSelection();

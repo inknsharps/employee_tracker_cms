@@ -18,9 +18,9 @@ connection.connect((err) => {
 let currentDepartments = [];
 let renderDepartments = () => {
     currentDepartments = [];
-    connection.query("SELECT id, name FROM department", (err, res) => {
+    connection.query("SELECT id, dept_name FROM department", (err, res) => {
         if (err) throw err;
-        res.forEach(index => currentDepartments.push(index.name));
+        res.forEach(index => currentDepartments.push(index.dept_name));
     })
 }
 
