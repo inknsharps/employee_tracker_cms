@@ -20,7 +20,7 @@ let {
     deleteDepartment,
     deleteRole,
     deleteEmployee
-} = require("./assets/menu")
+} = require("./assets/menu");
 
 /* Menu Functions */
 const mainMenuSelection = () => {
@@ -195,11 +195,11 @@ const updateData = (dataType) => {
     switch (dataType){
         case "roles":
             inquirer.prompt(updateEmployeeRole)
-                .then(answers => {
+                .then(({newRole, selectedEmployee}) => {
                     connection.query("UPDATE employee SET role_id = ? WHERE id = ?", [
-                        currentRoles.indexOf(answers.newRole) + 1, parseInt(answers.selectedEmployee)], (err, res) => {
+                        currentRoles.indexOf(newRole) + 1, parseInt(selectedEmployee)], (err, res) => {
                             if (err) throw err;
-                            console.log(`Updated employee ${answers.selectedEmployee}'s role to ${answers.newRole}.`);
+                            console.log(`Updated employee ${selectedEmployee}'s role to ${newRole}.`);
                             updateMenuSelection();
                         }
                     )
@@ -237,23 +237,23 @@ const createData = (dataType) => {
             break;
         case "roles":
             inquirer.prompt(addRole)
-                .then(answers => {
+                .then(({roleTitle, roleSalary, roleDepartment}) => {
                     // Same indexOf thing as the employees, but this time we're getting the department ID
-                    connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answers.roleTitle, answers.roleSalary, currentDepartments.indexOf(answers.roleDepartment) + 1], (err, res) => {
+                    connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [roleTitle, roleSalary, currentDepartments.indexOf(roleDepartment) + 1], (err, res) => {
                         if (err) throw err;
-                        console.log(`Added new role: ${answers.roleTitle} with salary of ${answers.roleSalary}.`);
-                        currentRoles.push(answers.roleTitle);
+                        console.log(`Added new role: ${roleTitle} with salary of ${roleSalary}.`);
+                        currentRoles.push(roleTitle);
                         createMenuSelection();
                     })
                 })
             break;
         case "departments":
             inquirer.prompt(addDepartment)
-                .then(answers => {
-                    connection.query("INSERT INTO department (name) VALUES (?)", answers.departmentName, (err, res) => {
+                .then(({departmentName}) => {
+                    connection.query("INSERT INTO department (name) VALUES (?)", departmentName, (err, res) => {
                         if (err) throw err;
-                        console.log(`Added new department: ${answers.departmentName}`);
-                        currentDepartments.push(answers.departmentName);
+                        console.log(`Added new department: ${departmentName}`);
+                        currentDepartments.push(departmentName);
                         createMenuSelection();
                     })
                 })
