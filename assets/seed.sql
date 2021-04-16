@@ -36,6 +36,9 @@ VALUES ("Marketing Manager", 65000, 1), ("Marketing Associate", 45000, 1), ("Lea
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES ("Jane", "One", 1), ("John", "Two", 2), ("Vito", "Three", 3);
 
+
+-- BELOW IS FOR TESTING ONLY!! --
+
 -- DELETE FROM employee WHERE id = ;
 -- DELETE FROM role WHERE id = 5;
 
@@ -45,9 +48,9 @@ VALUES ("Jane", "One", 1), ("John", "Two", 2), ("Vito", "Three", 3);
 -- SELECT * FROM role;
 -- SELECT * FROM employee;
 
-SELECT manager_id, employee.id, first_name, last_name FROM employee ORDER BY manager_id DESC;
+-- SELECT manager_id, employee.id, first_name, last_name FROM employee ORDER BY manager_id DESC;
 
-SELECT employee.manager_id, employee.id, first_name, last_name FROM employee FULL JOIN employee ORDER BY manager_id DESC;
+-- SELECT employee.manager_id, employee.id, employee.first_name, employee.last_name FROM employee FULL JOIN employee ORDER BY manager_id DESC;
 
 -- SELECT employee.id, first_name, last_name, title, salary, name, manager_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id;
 -- SELECT name = "IT", title, salary, first_name, last_name FROM department INNER JOIN role on department.id = role.department_id INNER JOIN employee on role.id = employee.role_id;-- 

@@ -341,6 +341,3 @@ connection.connect((err) => {
     console.log(`MYSQL: Connected as ID ${connection.threadId}.`);
     mainMenuSelection();
 });
-
-// TO DO
-// destructure some asnwers from inquirer for cleaner code
