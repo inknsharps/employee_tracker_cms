@@ -14,8 +14,8 @@ connection.connect((err) => {
     if (err) throw err;
 });
 
-/* The following arrays and functions grab the respective data from the DB, then shoves it into an array for use in the application. */
-let currentDepartments = [];
+/* The following empty arrays and functions grab the respective data from the DB, then shoves it into an array for use in the application. */
+let currentDepartments;
 let renderDepartments = () => {
     currentDepartments = [];
     connection.query("SELECT id, dept_name FROM department", (err, res) => {
@@ -24,16 +24,18 @@ let renderDepartments = () => {
     })
 }
 
-let currentRoles = [];
+let currentRoles;
 let renderRoles = () => {
+    currentRoles = [];
     connection.query("SELECT id, title FROM role", (err, res) => {
         if (err) throw err;
         res.forEach(index => currentRoles.push(index.title));
     })    
 }
 
-let currentEmployees = [];
+let currentEmployees;
 let renderEmployees = () => {
+    currentEmployees = [];
     connection.query("SELECT id, first_name, last_name FROM employee", (err, res) => {
         if (err) throw err;
         res.forEach(index => currentEmployees.push(`${index.id} - ${index.first_name} ${index.last_name}`));

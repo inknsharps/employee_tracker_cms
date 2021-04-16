@@ -238,6 +238,7 @@ const createData = (dataType) => {
                         if (err) throw err;
                         // res.insertID gives us the ID of the row we inserted this into, which we need for our current employees array
                         console.log(`Added new employee: ID ${res.insertId} - ${employeeFName} ${employeeLName}, Role: ${employeeRole}.`);
+                        
                         currentEmployees.push(`${res.insertId} - ${employeeFName} ${employeeLName}`);
                         createMenuSelection();
                     }) 
@@ -272,11 +273,11 @@ const createData = (dataType) => {
 const readData = (dataType) => {
     switch (dataType){
         case "employees":
-            connection.query("SELECT employee.id, first_name, last_name, title, salary, name, manager_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id", (err, res) => {
+            connection.query("SELECT employee.id, first_name, last_name, title, salary, dept_name, manager_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id", (err, res) => {
                 if (err) throw err;
                 let employees = [];
                 res.forEach(index => {
-                    employees.push({ EmployeeID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, ManagersID: index.manager_id, Department: index.name, Salary: index.salary });
+                    employees.push({ EmployeeID: index.id, FirstName: index.first_name, LastName: index.last_name, Role: index.title, ManagersID: index.manager_id, Department: index.dept_name, Salary: index.salary });
                 })
                 console.table(employees);
                 viewMenuSelection();
