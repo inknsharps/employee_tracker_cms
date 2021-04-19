@@ -53,23 +53,23 @@ const viewMenuSelection = () => {
             switch (selection.viewMenu){
                 case "View all employees":
                     console.log("\n ---------------------------------------- \n LIST OF EMPLOYEES \n ---------------------------------------- \n");
-                    readData("employees");
+                    readEmployeeQuery();
                     break;
                 case "View all employees by manager":
                     console.log("\n ---------------------------------------- \n LIST OF EMPLOYEES BY MANAGER \n ---------------------------------------- \n");
-                    readData("employeesByManager")
+                    readEmployeesByManagerQuery();
                     break
                 case "View all departments":
                     console.log("\n ---------------------------------------- \n LIST OF DEPARTMENTS \n ---------------------------------------- \n");
-                    readData("departments");
+                    readDepartmentsQuery();
                     break;
                 case "View all roles":
                     console.log("\n ---------------------------------------- \n LIST OF ROLES \n ---------------------------------------- \n");
-                    readData("roles");
+                    readRolesQuery();
                     break;
                 case "View budget":
                     console.log("\n ---------------------------------------- \n VIEW BUDGET \n ---------------------------------------- \n");
-                    readData("budget");
+                    readBudgetQuery();
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
                     mainMenuSelection();
@@ -84,15 +84,15 @@ const createMenuSelection = () => {
             switch (selection.createMenu){
                 case "Create new employee":
                     console.log("\n ---------------------------------------- \n CREATE NEW EMPLOYEE \n ---------------------------------------- \n");
-                    createData("employees");
+                    createEmployeeQuery();
                     break;
                 case "Create new role":
                     console.log("\n ---------------------------------------- \n CREATE NEW ROLE \n ---------------------------------------- \n");
-                    createData("roles");
+                    createRoleQuery();
                     break;
                 case "Create new department":
                     console.log("\n ---------------------------------------- \n CREATE NEW DEPARTMENT \n ---------------------------------------- \n");
-                    createData("departments");
+                    createDepartmentQuery();
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
                     mainMenuSelection();
@@ -107,11 +107,11 @@ const updateMenuSelection = () => {
             switch (selection.updateMenu){
                 case "Update employee roles":
                     console.log("\n ---------------------------------------- \n UPDATE EMPLOYEE'S ROLE \n ---------------------------------------- \n");
-                    updateData("roles");
+                    updateRolesQuery();
                     break;
                 case "Update employee manager":
                     console.log("\n ---------------------------------------- \n UPDATE EMPLOYEE'S MANAGER \n ---------------------------------------- \n");
-                    updateData("manager");
+                    updateEmployeeManagerQuery();
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
                     mainMenuSelection();
@@ -126,15 +126,15 @@ const deleteMenuSelection = () => {
             switch (selection.deleteMenu){
                 case "Delete employee":
                     console.log("\n ---------------------------------------- \n DELETE EMPLOYEES \n ---------------------------------------- \n");
-                    deleteData("employee");
+                    deleteEmployeeQuery();
                     break;
                 case "Delete role":
                     console.log("\n ---------------------------------------- \n DELETE ROLES \n ---------------------------------------- \n");
-                    deleteData("role");
+                    deleteRoleQuery();
                     break;
                 case "Delete department":
                     console.log("\n ---------------------------------------- \n DELETE DEPARTMENTS \n ---------------------------------------- \n");
-                    deleteData("department");
+                    deleteDepartmentQuery();
                     break;
                 case "-------- RETURN TO MAIN MENU --------":
                     mainMenuSelection();
@@ -143,7 +143,7 @@ const deleteMenuSelection = () => {
         })
 }
 
-/* Delete Queries and Helper Functions */
+/* Delete Query Functions */
 // For the same reasons as in the create data queries, we update our data arrays manually with the splice method.
 const deleteEmployeeQuery = () => {
     inquirer.prompt(deleteEmployee)
@@ -189,21 +189,7 @@ const deleteDepartmentQuery = () => {
         })
 }
 
-const deleteData = (dataType) => {
-    switch (dataType){
-        case ("employee"):
-            deleteEmployeeQuery();
-            break;
-        case ("role"):
-            deleteRoleQuery();
-            break;
-        case ("department"):
-            deleteDepartmentQuery();
-            break;
-    }
-}
-
-/* Update Queries and Helper Functions */
+/* Update Query Functions */
 const updateRolesQuery = () => {
     inquirer.prompt(updateEmployeeRole)
         .then(({newRole, selectedEmployee}) => {
@@ -227,17 +213,6 @@ const updateEmployeeManagerQuery = () => {
                 updateMenuSelection();
             })
         })
-}
-
-const updateData = (dataType) => {
-    switch (dataType){
-        case "roles":
-            updateRolesQuery();
-            break;
-        case "manager":
-            updateEmployeeManagerQuery();
-            break;
-    }
 }
 
 /* Create queries and helper functions */
@@ -281,21 +256,7 @@ const createDepartmentQuery = () => {
         })
 }
 
-const createData = (dataType) => {
-    switch (dataType){
-        case "employees":
-            createEmployeeQuery();
-            break;
-        case "roles":
-            createRoleQuery();
-            break;
-        case "departments":
-            createDepartmentQuery();
-            break;
-    }
-}
-
-/* Read queries and helper functions */
+/* Read Query Functions */
 const readEmployeeQuery = () => {
     connection.query("SELECT employee.id, first_name, last_name, title, salary, dept_name, manager_id FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id", (err, res) => {
         if (err) throw err;
@@ -370,26 +331,6 @@ const readBudgetQuery = () => {
                 }
             })
         })
-}
-
-const readData = (dataType) => {
-    switch (dataType){
-        case "employees":
-            readEmployeeQuery();
-            break;
-        case "employeesByManager":
-            readEmployeesByManagerQuery();
-            break;
-        case "roles":
-            readRolesQuery();
-            break;
-        case "departments":
-            readDepartmentsQuery();
-            break;
-        case "budget":
-            readBudgetQuery();
-            break;
-    }
 }
 
 /* Connection Functions */
