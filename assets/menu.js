@@ -1,6 +1,15 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 
+/* The explanation for this hot mess of including and using the MySQL module here, and making separate arrays for the current information in the application:
+
+Inquirer is promised based, while MySQL appears to use callback in a callback, so the JS event loop deals with inquirer first, then MySQL's functions.
+
+Therefore, trying to use the MySQL queries directly as choices for the inquirer prompts just doesn't work. You get thrown an error that nothing is in the choices array (because it hasn't executed yet!).
+
+Thanks JavaScript. 
+*/ 
+
 /* Connection Functions */
 const connection = mysql.createConnection({
     host: "localhost",
@@ -14,7 +23,6 @@ connection.connect((err) => {
     if (err) throw err;
 });
 
-/* The following empty arrays and functions grab the respective data from the DB, then shoves it into an array for use in the application. */
 let currentDepartments;
 let renderDepartments = () => {
     currentDepartments = [];
