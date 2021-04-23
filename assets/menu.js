@@ -21,10 +21,10 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
-    console.log("Retrieving database records...");
     renderDepartments();
     renderRoles();
     renderEmployees();
+    console.log("Retrieving database records...");
     connection.end();
 });
 
