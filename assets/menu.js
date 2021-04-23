@@ -21,9 +21,6 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
-    renderDepartments();
-    renderRoles();
-    renderEmployees();
     console.log("Retrieving database records...");
     connection.end();
 });
@@ -55,7 +52,9 @@ const renderEmployees = () => {
     })
 }
 
-
+renderDepartments();
+renderRoles();
+renderEmployees();
 
 /* Inquirer Menu Arrays */ 
 const mainMenu = [

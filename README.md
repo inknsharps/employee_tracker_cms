@@ -37,4 +37,4 @@ Menu navigation is done through the arrow keys, and enter/return to confirm your
 
 If the program is unresponsive, you can always end the process with `Ctrl/cmd + C`.
 
-A video demonstration of all functionality is available [here](#).
+A video demonstration of all functionality is available [here](https://youtu.be/wzc93dHezMo).
