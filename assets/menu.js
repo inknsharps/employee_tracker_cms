@@ -21,10 +21,15 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
+    console.log("Retrieving database records...");
+    renderDepartments();
+    renderRoles();
+    renderEmployees();
+    connection.end();
 });
 
 let currentDepartments;
-let renderDepartments = () => {
+const renderDepartments = () => {
     currentDepartments = [];
     connection.query("SELECT id, dept_name FROM department", (err, res) => {
         if (err) throw err;
@@ -33,7 +38,7 @@ let renderDepartments = () => {
 }
 
 let currentRoles;
-let renderRoles = () => {
+const renderRoles = () => {
     currentRoles = [];
     connection.query("SELECT id, title FROM role", (err, res) => {
         if (err) throw err;
@@ -42,7 +47,7 @@ let renderRoles = () => {
 }
 
 let currentEmployees;
-let renderEmployees = () => {
+const renderEmployees = () => {
     currentEmployees = [];
     connection.query("SELECT id, first_name, last_name FROM employee", (err, res) => {
         if (err) throw err;
@@ -50,9 +55,7 @@ let renderEmployees = () => {
     })
 }
 
-renderDepartments();
-renderRoles();
-renderEmployees();
+
 
 /* Inquirer Menu Arrays */ 
 const mainMenu = [
